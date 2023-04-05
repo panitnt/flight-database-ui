@@ -7,7 +7,7 @@ const listAllFlight = async (res) => {
   try {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    const result = await request.query("SELECT a.airlineName, fp.flightNumber, apd.departure_airport, apd.destination_airport, CONVERT(VARCHAR(5),apd.departure_time, 108) as 'departure_time', CONVERT(VARCHAR(5),apd.arrive_time, 108) as 'arrival_time' , CONVERT(VARCHAR(10),fp.flight_date, 103) as 'flight_date' FROM desAirportName apd, FlightPlan fp, Airline a WHERE (apd.flight_number = fp.FlightNumber) and (a.airlineID = apd.airlineID)");
+    const result = await request.query("SELECT * FROM AllFlightShow ORDER BY flight_date, departure_time");
     return result;
   } catch (err) {
     console.log(string_connection);
@@ -17,8 +17,38 @@ const listAllFlight = async (res) => {
   }
 };
 
+const sortFlight = async (res, flightNum , date) =>{
+  try{
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortFunc = `SELECT * FROM AllFlightShow`
+
+    if ((flightNum != '') || (date !== null)){
+      sortFunc += " WHERE"
+      if (flightNum != '') sortFunc += ` (flightNumber = '${flightNum}')`
+      if (date !== null) sortFunc += `flight_date = ${date}`
+    }
+    // console.log(sortFunc)
+    const result = await request.query(sortFunc);
+    return result;
+  }
+  catch(err){
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally {
+    sql.close();
+  }
+};
+
 var express = require("express");
+var cors = require("cors");
+var bodyParser = require("body-parser");
+
 var app = express();
+app.use(cors());
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: false }));
+
 
 app.set("view engine", "ejs");
 app.get("/", function (req, res) {
@@ -30,6 +60,15 @@ app.get("/flight", async function (req, res) {
     flightResult: result.recordset,
   });
 });
+
+app.post("/flight/sort", async function (req, res) {
+  // console.log(req.body.flightNum)
+  let result = await sortFlight(req, req.body.flightNum, null);
+  res.render("flight", {
+    flightResult: result.recordset,
+  });
+})
+
 app.listen(8083, "localhost", () => {
   console.log("URL: http://localhost:8083");
 });
