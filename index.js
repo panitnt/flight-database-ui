@@ -49,7 +49,7 @@ const flightEmployee = async (res) => {
   try {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    const result = await request.query("SELECT * FROM FlightEmployee fe, Employee e, FlightPlan fp, Airplane a, Airline air WHERE fe.flightPlanID = fp.PlanID and fe.emp_ID = e.emp_ID and fp.planeID = a.planeID and air.airlineID = e.airlineID");
+    const result = await request.query("SELECT * FROM FlightEmployee fe, Employee e, FlightPlan fp, Airplane a, Airline air WHERE fe.flightPlanID = fp.PlanID and fe.emp_ID = e.emp_ID and fp.planeID = a.planeID and air.airlineID = e.airlineID ORDER BY fp.FlightNumber");
     return result;
   } catch (err) {
     console.log(string_connection);
