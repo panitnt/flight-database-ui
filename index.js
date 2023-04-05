@@ -7,7 +7,7 @@ const listAllFlight = async (res) => {
   try {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    const result = await request.query("SELECT * FROM Flight");
+    const result = await request.query("SELECT * FROM AllFlightShow ORDER BY flight_date, departure_time");
     return result;
   } catch (err) {
     console.log(string_connection);
@@ -73,6 +73,31 @@ const seacrhFlightEmployee = async (res, flightnum) => {
   }
 };
 
+const sortFlight = async (res, flightNum , date) =>{
+  try{
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortFunc = `SELECT * FROM AllFlightShow`
+
+    if ((flightNum != '') || (date !== null)){
+      sortFunc += " WHERE"
+      if (flightNum != '') sortFunc += ` (flightNumber = '${flightNum}')`
+      if ((flightNum != '')&& (date !== null)) sortFunc += `and ( flight_date = '${date}')`
+      else if (date !== null) sortFunc += ` (flight_date = '${date}')`
+    }
+    sortFunc += " ORDER BY flight_date, departure_time"
+    // console.log(sortFunc)
+    const result = await request.query(sortFunc);
+    return result;
+  }
+  catch(err){
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally {
+    sql.close();
+  }
+};
+
 var express = require("express");
 var cors = require("cors");
 var app = express();
@@ -92,6 +117,19 @@ app.get("/flight", async function (req, res) {
     flightResult: result.recordset,
   });
 });
+
+app.post("/flight/sort", async function (req, res) {
+  // console.log(req.body.dateSelect=='');
+  // console.log(newDate);
+  let dateInput = req.body.dateSelect;
+  if (req.body.dateSelect == '') {
+    dateInput = null
+  }
+  let result = await sortFlight(req, req.body.flightNum, dateInput);
+  res.render("flight", {
+    flightResult: result.recordset,
+  });
+})
 
 app.get("/passenger", async function (req, res) {
   let result = await passenger(res);
@@ -120,6 +158,7 @@ app.post("/search-flight-employee", async function (req, res) {
     flightEmployeeResult: result.recordset,
   });
 });
+
 
 app.listen(8083, "localhost", () => {
   console.log("URL: http://localhost:8083");
