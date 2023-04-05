@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Employee</title>
+</head>
+
+<body>
+    <h1>Flight Employee</h1>
+    <table border="1">
+        <thead>
+            <th>Flight Number</th>
+            <th>Airline Name</th>
+            <th>Flight Date</th>
+            <th>Position</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Passport Number</th>
+            <th>Gender</th>
+            <th>Nationality</th>
+            <th>Birthday</th>
+            <th>Aircraft Type</th>
+        </thead>
+        <tbody>
+            <%flightEmployeeResult.forEach(function(flightEmployeeResult, index){ %>
+                <tr>
+                    <td>
+                        <%=flightEmployeeResult.FlightNumber%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.airlineName%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.flight_date%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.role%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.FirstName%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.MiddleName%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.LastName%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.Passport_number%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.nationality%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.gender%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.birthday.toDateString()%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.type%>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</body>
+
+</html>

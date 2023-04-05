@@ -45,6 +45,20 @@ const reserve = async (res) => {
   }
 };
 
+const flightEmployee = async (res) => {
+  try {
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    const result = await request.query("SELECT * FROM FlightEmployee fe, Employee e, FlightPlan fp, Airplane a, Airline air WHERE fe.flightPlanID = fp.PlanID and fe.emp_ID = e.emp_ID and fp.planeID = a.planeID and air.airlineID = e.airlineID");
+    return result;
+  } catch (err) {
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally {
+    sql.close();
+  }
+};
+
 var express = require("express");
 var app = express();
 
@@ -68,6 +82,12 @@ app.get("/reserve", async function (req, res) {
   let result = await reserve(res);
   res.render("reserve", {
     reserveResult: result.recordset,
+  });
+});
+app.get("/flight-employee", async function (req, res) {
+  let result = await flightEmployee(res);
+  res.render("flightEmployee", {
+    flightEmployeeResult: result.recordset,
   });
 });
 app.listen(8083, "localhost", () => {
