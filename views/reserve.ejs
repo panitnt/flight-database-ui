@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passenger Reservation</title>
+</head>
+<body>
+    <h1>Passenger Reservation</h1>
+    <table border="1">
+        <thead>
+            <th>Flight Number</th>
+            <th>Airline Name</th>
+            <th>Passport Number</th>
+            <th>First Number</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>Nationality</th>
+            <th>Birthday</th>
+            <th>Seat Number</th>
+            <th>Aircraft Type</th>
+        </thead>
+        <tbody>
+            <%reserveResult.forEach(function(reserveResult, index){ %>
+                <tr>
+                    <td>
+                        <%=reserveResult.FlightNumber%>
+                    </td>
+                    <td>
+                        <%=reserveResult.airlineName%>
+                    </td>
+                    <td>
+                        <%=reserveResult.passengerID%>
+                    </td>
+                    <td>
+                        <%=reserveResult.firstName%>
+                    </td>
+                    <td>
+                        <%=reserveResult.middleName%>
+                    </td>
+                    <td>
+                        <%=reserveResult.lastName%>
+                    </td>
+                    <td>
+                        <%=reserveResult.gender%>
+                    </td>
+                    <td>
+                        <%=reserveResult.nationality%>
+                    </td>
+                    <td>
+                        <%=reserveResult.birthday.toDateString()%>
+                    </td>
+                    <td>
+                        <%=reserveResult.seat%>
+                    </td>
+                    <td>
+                        <%=reserveResult.type%>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</body>
+
+</html>
