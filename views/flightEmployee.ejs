@@ -13,103 +13,86 @@
 </head>
 
 <body>
-    <h1>Flight Employee</h1>
-    <form action="/search-flight-employee" method="POST">
-        <label>
-            <span>Flight Number : </span>
-            <input type="text" name="flightn" value="" />
-        </label>
-        <input type="submit" value="submit" />
-    </form>
-    <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
-      </table>
-    <table border="1">
-        <thead>
-            <th>Flight Number</th>
-            <th>Airline Name</th>
-            <th>Flight Date</th>
-            <th>Position</th>
-            <th>Aircraft Type</th>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Passport Number</th>
-            <th>Gender</th>
-            <th>Nationality</th>
-            <th>Birthday</th>
-        </thead>
-        <tbody>
-            <%flightEmployeeResult.forEach(function(flightEmployeeResult, index){ %>
-                <tr>
-                    <td>
-                        <%=flightEmployeeResult.FlightNumber%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.airlineName%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.flight_date%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.role%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.type%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.FirstName%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.MiddleName%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.LastName%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.Passport_number%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.nationality%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.gender%>
-                    </td>
-                    <td>
-                        <%=flightEmployeeResult.birthday.toDateString()%>
-                    </td>
-                </tr>
+    <%-include('./navbar')%>
+    <div style="padding: 2%">
+        <h1>Flight Employee</h1>
+        <form action="/search-flight-employee" method="POST">
+            <div class="mb-3 w-25">
+                <label class="form-label">Flight Number</label>
+                <input type="text" name="flightn" value="" class="form-control" placeholder="XX123" width="300px"/>
+            </div>
+            <!-- <label>
+                <span>Flight Number : </span>
+                <input type="text" name="flightn" value="" />
+            </label> -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a class="btn btn-primary" href="/flight-employee">Reset</a>
+            <!-- <input type="submit" value="Submit" /> -->
+        </form>
+    </div>
+    <div style="padding: 0% 1% 2% 1%;">
+        <table class="table">
+            <thead class="table-dark">
+            <tr>
+                    <th scope="col">Flight Number</th>
+                    <th scope="col">Airline Name</th>
+                    <th scope="col">Flight Date</th>
+                    <th scope="col">Position</th>
+                    <th scope="col">Aircraft Type</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Middle Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Passport Number</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Nationality</th>
+                    <th scope="col">Birthday</th>
+            </tr>
+            </thead>
+            
+            <tbody>
+                <%flightEmployeeResult.forEach(function(flightEmployeeResult, index){ %>
+                    <tr>
+                        <td>
+                            <%=flightEmployeeResult.FlightNumber%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.airlineName%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.flight_date.toDateString()%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.role%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.type%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.FirstName%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.MiddleName%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.LastName%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.Passport_number%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.nationality%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.gender%>
+                        </td>
+                        <td>
+                            <%=flightEmployeeResult.birthday.toDateString()%>
+                        </td>
+                    </tr>
                 <% }) %>
-        </tbody>
-    </table>
-    <button><a href="/flight-employee">Back</a></button>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
