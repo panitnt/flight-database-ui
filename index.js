@@ -53,7 +53,30 @@ const reserve = async (res) => {
   try {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    const result = await request.query("SELECT * FROM Reserve r, FlightPlan f, Airplane p, Airline a, Passenger pass WHERE r.flightPlanID = f.PlanID and f.planeID = p.planeID and a.airlineID = p.airlineID and pass.passportNum = r.passengerID");
+    const result = await request.query("SELECT * FROM Reserve r, FlightPlan f, Airplane p, Airline a, Passenger pass WHERE r.flightPlanID = f.PlanID and f.planeID = p.planeID and a.airlineID = p.airlineID and pass.passportNum = r.passengerID ORDER BY f.FlightNumber");
+    return result;
+  } catch (err) {
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally {
+    sql.close();
+  }
+};
+
+const reserveSort = async (res, passportNum, flightNum) => {
+  try {
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let findList = `SELECT * FROM Reserve r, FlightPlan f, Airplane p, Airline a, Passenger pass WHERE (r.flightPlanID = f.PlanID) and (f.planeID = p.planeID) and (a.airlineID = p.airlineID) and (pass.passportNum = r.passengerID)`
+      if (passportNum != '') {
+        findList += ` and (pass.passportNum = '${passportNum}')`
+      }
+      if (flightNum != '') {
+        findList += ` and (f.FlightNumber = '${flightNum}')`
+      }
+    findList += ` ORDER BY f.FlightNumber`
+    // console.log(findList)
+    const result = await request.query(findList);
     return result;
   } catch (err) {
     console.log(string_connection);
@@ -81,7 +104,7 @@ const seacrhFlightEmployee = async (res, flightnum) => {
   try {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    const result = await request.query(`SELECT * FROM FlightEmployee fe, Employee e, FlightPlan fp, Airplane a, Airline air WHERE fe.flightPlanID = fp.PlanID and fe.emp_ID = e.emp_ID and fp.planeID = a.planeID and air.airlineID = e.airlineID and fp.FlightNumber = '${flightnum}'`);
+    const result = await request.query(`SELECT * FROM FlightEmployee fe, Employee e, FlightPlan fp, Airplane a, Airline air WHERE fe.flightPlanID = fp.PlanID and fe.emp_ID = e.emp_ID and fp.planeID = a.planeID and air.airlineID = e.airlineID and fp.FlightNumber = '${flightnum}' ORDER BY fp.FlightNumber`);
     return result;
   } catch (err) {
     console.log(string_connection);
@@ -165,6 +188,13 @@ app.post("/passenger/sort", async function (req, res) {
 
 app.get("/reserve", async function (req, res) {
   let result = await reserve(res);
+  res.render("reserve", {
+    reserveResult: result.recordset,
+  });
+});
+
+app.post("/reserve/sort", async function (req, res) {
+  let result = await reserveSort(res, req.body.passportNum, req.body.flightNum);
   res.render("reserve", {
     reserveResult: result.recordset,
   });
