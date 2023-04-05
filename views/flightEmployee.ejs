@@ -13,21 +13,21 @@
 </head>
 
 <body>
-    <div style="padding: 2% 2% 0% 2%">
+    <div style="padding: 2%">
         <h1>Flight Employee</h1>
         <form action="/search-flight-employee" method="POST">
-            <div class="mb-3">
+            <div class="mb-3 w-25">
                 <label class="form-label">Flight Number</label>
-                <input type="text" name="flightn" value="" class="form-control"/>
+                <input type="text" name="flightn" value="" class="form-control" placeholder="XX123" width="300px"/>
             </div>
             <!-- <label>
                 <span>Flight Number : </span>
                 <input type="text" name="flightn" value="" />
             </label> -->
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a class="btn btn-primary" href="/flight-employee">Reset</a>
             <!-- <input type="submit" value="Submit" /> -->
         </form>
-        <img src="https://www.logo.wine/a/logo/Thai_Airways/Thai_Airways-Logo.wine.svg" width="200" height="100">
     </div>
     <div style="padding: 0% 1% 2% 1%;">
         <table class="table">
@@ -91,7 +91,6 @@
                 <% }) %>
             </tbody>
         </table>
-        <a class="btn btn-primary" href="/flight-employee">Back</a>
     </div>
 </body>
 
