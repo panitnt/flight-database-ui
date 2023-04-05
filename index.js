@@ -31,6 +31,24 @@ const passenger = async (res) => {
   }
 };
 
+const passengerSort = async (res, passportNum) => {
+  try {
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let searchSQL = `SELECT * FROM Passenger`
+    if (passportNum!=''){
+      searchSQL += ` WHERE (passportNum = '${passportNum}')`
+    }
+    const result = await request.query(searchSQL);
+    return result;
+  } catch (err) {
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally {
+    sql.close();
+  }
+};
+
 const reserve = async (res) => {
   try {
     let con = await sql.connect(string_connection);
@@ -125,7 +143,7 @@ app.post("/flight/sort", async function (req, res) {
   if (req.body.dateSelect == '') {
     dateInput = null
   }
-  let result = await sortFlight(req, req.body.flightNum, dateInput);
+  let result = await sortFlight(res, req.body.flightNum, dateInput);
   res.render("flight", {
     flightResult: result.recordset,
   });
@@ -133,6 +151,13 @@ app.post("/flight/sort", async function (req, res) {
 
 app.get("/passenger", async function (req, res) {
   let result = await passenger(res);
+  res.render("passenger", {
+    passengerResult: result.recordset,
+  });
+});
+
+app.post("/passenger/sort", async function (req, res) {
+  let result = await passengerSort(res, req.body.passportNum);
   res.render("passenger", {
     passengerResult: result.recordset,
   });
