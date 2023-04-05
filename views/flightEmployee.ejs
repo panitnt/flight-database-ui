@@ -10,12 +10,20 @@
 
 <body>
     <h1>Flight Employee</h1>
+    <form action="/search-flight-employee" method="POST">
+        <label>
+            <span>Flight Number : </span>
+            <input type="text" name="flightn" value="" />
+        </label>
+        <input type="submit" value="submit" />
+    </form>
     <table border="1">
         <thead>
             <th>Flight Number</th>
             <th>Airline Name</th>
             <th>Flight Date</th>
             <th>Position</th>
+            <th>Aircraft Type</th>
             <th>First Name</th>
             <th>Middle Name</th>
             <th>Last Name</th>
@@ -23,7 +31,6 @@
             <th>Gender</th>
             <th>Nationality</th>
             <th>Birthday</th>
-            <th>Aircraft Type</th>
         </thead>
         <tbody>
             <%flightEmployeeResult.forEach(function(flightEmployeeResult, index){ %>
@@ -39,6 +46,9 @@
                     </td>
                     <td>
                         <%=flightEmployeeResult.role%>
+                    </td>
+                    <td>
+                        <%=flightEmployeeResult.type%>
                     </td>
                     <td>
                         <%=flightEmployeeResult.FirstName%>
@@ -61,13 +71,11 @@
                     <td>
                         <%=flightEmployeeResult.birthday.toDateString()%>
                     </td>
-                    <td>
-                        <%=flightEmployeeResult.type%>
-                    </td>
                 </tr>
                 <% }) %>
         </tbody>
     </table>
+    <button><a href="/flight-employee">Back</a></button>
 </body>
 
 </html>
