@@ -7,21 +7,28 @@
     <title>Passenger in Flight</title>
 </head>
 <body>
+    <a href="/">Home</a>
     <table border="1">
     <thead>
-        <th>airline name</th>
+        <th>airline</th>
         <th>flight number</th>
-        <th>flight date</th>
+        <th>date</th>
+        <th>departure airport</th>
+        <th>destination airport</th>
         <th>departure time</th>
+        <th>arrival time</th>
     </thead>
     <tbody>
     <%flightResult.forEach(function(flightResult, index){
         %>
         <tr>
-            <td><%=flightResult.flight_number%></td>
-            <td><%=flightResult.airlineID%></td>
+            <td><%=flightResult.airlineName%></td>
+            <td><%=flightResult.flightNumber%></td>
+            <td><%=flightResult.flight_date%></td>
             <td><%=flightResult.departure_airport%></td>
             <td><%=flightResult.destination_airport%></td>
+            <td><%=flightResult.departure_time%></td>
+            <td><%=flightResult.arrival_time%></td>
         </tr>
         <%
     })

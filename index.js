@@ -7,7 +7,7 @@ const listAllFlight = async (res) => {
   try {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    const result = await request.query("SELECT f.flight_number, f.airlineID, f.departure_airport, a.airportName as 'destination_airport' FROM desAirportSort f, Airport a WHERE (f.destination_airport = a.airportID)");
+    const result = await request.query("SELECT a.airlineName, fp.flightNumber, apd.departure_airport, apd.destination_airport, CONVERT(VARCHAR(5),apd.departure_time, 108) as 'departure_time', CONVERT(VARCHAR(5),apd.arrive_time, 108) as 'arrival_time' , CONVERT(VARCHAR(10),fp.flight_date, 103) as 'flight_date' FROM desAirportName apd, FlightPlan fp, Airline a WHERE (apd.flight_number = fp.FlightNumber) and (a.airlineID = apd.airlineID)");
     return result;
   } catch (err) {
     console.log(string_connection);
