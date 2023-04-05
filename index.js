@@ -26,8 +26,10 @@ const sortFlight = async (res, flightNum , date) =>{
     if ((flightNum != '') || (date !== null)){
       sortFunc += " WHERE"
       if (flightNum != '') sortFunc += ` (flightNumber = '${flightNum}')`
-      if (date !== null) sortFunc += `flight_date = ${date}`
+      if ((flightNum != '')&& (date !== null)) sortFunc += `and ( flight_date = '${date}')`
+      else if (date !== null) sortFunc += ` (flight_date = '${date}')`
     }
+    sortFunc += " ORDER BY flight_date, departure_time"
     // console.log(sortFunc)
     const result = await request.query(sortFunc);
     return result;
@@ -62,8 +64,13 @@ app.get("/flight", async function (req, res) {
 });
 
 app.post("/flight/sort", async function (req, res) {
-  // console.log(req.body.flightNum)
-  let result = await sortFlight(req, req.body.flightNum, null);
+  // console.log(req.body.dateSelect=='');
+  // console.log(newDate);
+  let dateInput = req.body.dateSelect;
+  if (req.body.dateSelect == '') {
+    dateInput = null
+  }
+  let result = await sortFlight(req, req.body.flightNum, dateInput);
   res.render("flight", {
     flightResult: result.recordset,
   });
