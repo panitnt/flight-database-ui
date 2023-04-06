@@ -15,54 +15,61 @@
 
 <body>
     <%-include('./navbar')%>
-    <h1>Passenger Information</h1>
-    <div style="padding: 2%;">
-        <form action="/passenger/sort" method="post">
-            <div>
-                <span>Passport Number: </span>
-                <input type="text" name="passportNum" value="" />
+    <div style="padding: 2%">
+        <h1>Passenger Information</h1>
+        <form action="/passenger/sort" method="POST">
+            <div class="row row-col-2">
+                <div class="mb-3 w-25">
+                    <label class="form-label">Passport Number</label>
+                    <input type="text" name="passportNum" value="" class="form-control" placeholder="" width="300px"/>
+                </div>
             </div>
-            <input type="submit" value="submit" style="margin:1%;"/>
+            <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-    <table border="1">
-        <thead>
-            <th>Passport Number</th>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Gender</th>
-            <th>Nationality</th>
-            <th>Birthday</th>
-        </thead>
-        <tbody>
-            <%passengerResult.forEach(function(passengerResult, index){ %>
-                <tr>
-                    <td>
-                        <%=passengerResult.passportNum%>
-                    </td>
-                    <td>
-                        <%=passengerResult.firstName%>
-                    </td>
-                    <td>
-                        <%=passengerResult.middleName%>
-                    </td>
-                    <td>
-                        <%=passengerResult.lastName%>
-                    </td>
-                    <td>
-                        <%=passengerResult.gender%>
-                    </td>
-                    <td>
-                        <%=passengerResult.nationality%>
-                    </td>
-                    <td>
-                        <%=passengerResult.birthday.toDateString()%>
-                    </td>
-                </tr>
-                <% }) %>
-        </tbody>
-    </table>
+    <div style="padding: 0% 1% 2% 1%;">
+        <table class="table">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Passport Number</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Middle Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Nationality</th>
+                <th scope="col">Birthday</th>
+            </tr>
+            </thead>
+            
+            <tbody>
+                <%passengerResult.forEach(function(passengerResult, index){ %>
+                    <tr>
+                        <td>
+                            <%=passengerResult.passportNum%>
+                        </td>
+                        <td>
+                            <%=passengerResult.firstName%>
+                        </td>
+                        <td>
+                            <%=passengerResult.middleName%>
+                        </td>
+                        <td>
+                            <%=passengerResult.lastName%>
+                        </td>
+                        <td>
+                            <%=passengerResult.gender%>
+                        </td>
+                        <td>
+                            <%=passengerResult.nationality%>
+                        </td>
+                        <td>
+                            <%=passengerResult.birthday.toDateString()%>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
