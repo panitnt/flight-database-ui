@@ -14,23 +14,25 @@
     <%-include('./navbar')%>
     <div>
         <form action="/flightplan/add" method="post">
-            <div>
-                <span>Plan ID: </span>
-                <input type="text" name="planID" required value="" />
+            <div style="padding: 4%;">
+                <div class="mb-3 w-25">
+                    <label class="form-label">Plan ID</label>
+                    <input type="text" name="planID" value="" class="form-control" placeholder="" width="300px"/>
+                </div>
+                <div class="mb-3 w-25">
+                    <label class="form-label">Flight Number</label>
+                    <input type="text" name="flightNum" value="" class="form-control" placeholder="" width="300px"/>
+                </div>
+                <div class="mb-3 w-25">
+                    <label class="form-label">Plane ID</label>
+                    <input type="text" name="planeNum" value="" class="form-control" placeholder="" width="300px"/>
+                </div>
+                <div class="mb-3 w-25">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="dateSelect" value="" class="form-control" placeholder="" width="300px"/>
+                </div>
+                <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
             </div>
-            <div>
-                <span>Flight Number: </span>
-                <input type="text" name="flightNum" required value="" />
-            </div>
-            <div>
-                <span>Plane ID: </span>
-                <input type="text" name="planeNum" required value="" />
-            </div>
-            <div>
-                <span>Date: </span>
-                <input type="date" name="dateSelect" required value="" />
-            </div>
-            <input type="submit" value="submit" style="margin:1%;"/>
         </form>
     </div>
 </body>
