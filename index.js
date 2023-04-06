@@ -158,7 +158,7 @@ const insertFlightPlan = async (res, planID, flightNum, planeID, date) => {
         var request = new sql.Request(transaction);
         request
           .query(
-            `INSERT INTO FlightPlan (PlanID,FlightNumber,planeID,flight_date) VALUES ('${planID}','${flightNum}', '${planeID}', '${date}')`
+            `INSERT INTO FlightPlan (PlanID,FlightNumber,planeID,flight_date) VALUES ('${planID}','${flightNum.toUpperCase()}', '${planeID}', '${date}')`
           )
           .then(function () {
             transaction
