@@ -4,7 +4,7 @@
 
 * Clone this project
 ```
-git clone https://github.com panitnt/database-ui.git
+git clone https://github.com/panitnt/database-ui.git
 ```
 
 * Get into project folder
