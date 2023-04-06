@@ -56,7 +56,7 @@ const reserve = async (res) => {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
     const result = await request.query(
-      "SELECT * FROM Reserve r, FlightPlan f, Airplane p, Airline a, Passenger pass WHERE r.flightPlanID = f.PlanID and f.planeID = p.planeID and a.airlineID = p.airlineID and pass.passportNum = r.passengerID ORDER BY f.FlightNumber"
+      "SELECT * FROM PassengerReserveDetail ORDER BY flightNumber"
     );
     return result;
   } catch (err) {
@@ -71,14 +71,18 @@ const reserveSort = async (res, passportNum, flightNum) => {
   try {
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    let findList = `SELECT * FROM Reserve r, FlightPlan f, Airplane p, Airline a, Passenger pass WHERE (r.flightPlanID = f.PlanID) and (f.planeID = p.planeID) and (a.airlineID = p.airlineID) and (pass.passportNum = r.passengerID)`;
-    if (passportNum != "") {
-      findList += ` and (pass.passportNum = '${passportNum}')`;
+    let findList = `SELECT * FROM PassengerReserveDetail`;
+
+    if (passportNum != "" || flightNum !== null) {
+      findList += " WHERE";
+      if (passportNum != "") findList += `(passengerID = '${passportNum}')`;
+      if (passportNum != "" && flightNum != "")
+        findList += ` and (flightNumber = '${flightNum}')`;
+      else if (flightNum != "") findList += `(flightNumber = '${flightNum}')`;
+      
     }
-    if (flightNum != "") {
-      findList += ` and (f.FlightNumber = '${flightNum}')`;
-    }
-    findList += ` ORDER BY f.FlightNumber`;
+    findList += " ORDER BY flightNumber";
+
     // console.log(findList)
     const result = await request.query(findList);
     return result;

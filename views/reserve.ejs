@@ -37,6 +37,13 @@
             <tr>
                 <th scope="col">Flight Number</th>
                 <th scope="col">Airline Name</th>
+                <th scope="col">Flight Date</th>
+                <th scope="col">Departure Airport</th>
+                <th scope="col">Destination Airport</th>
+                <th scope="col">Departure Time</th>
+                <th scope="col">Arrival Time</th>
+                <th scope="col">Seat Number</th>
+                <th scope="col">Aircraft Type</th>
                 <th scope="col">Passport Number</th>
                 <th scope="col">First Number</th>
                 <th scope="col">Middle Name</th>
@@ -44,8 +51,6 @@
                 <th scope="col">Gender</th>
                 <th scope="col">Nationality</th>
                 <th scope="col">Birthday</th>
-                <th scope="col">Seat Number</th>
-                <th scope="col">Aircraft Type</th>
             </tr>
             </thead>
             
@@ -53,10 +58,31 @@
                 <%reserveResult.forEach(function(reserveResult, index){ %>
                     <tr>
                         <td>
-                            <%=reserveResult.FlightNumber%>
+                            <%=reserveResult.flightNumber%>
                         </td>
                         <td>
                             <%=reserveResult.airlineName%>
+                        </td>
+                        <td>
+                            <%=reserveResult.flight_date.toDateString()%>
+                        </td>
+                        <td>
+                            <%=reserveResult.departure_airport%>
+                        </td>
+                        <td>
+                            <%=reserveResult.destination_airport%>
+                        </td>
+                        <td>
+                            <%=reserveResult.departure_time%>
+                        </td>
+                        <td>
+                            <%=reserveResult.arrival_time%>
+                        </td>
+                        <td>
+                            <%=reserveResult.seat%>
+                        </td>
+                        <td>
+                            <%=reserveResult.type%>
                         </td>
                         <td>
                             <%=reserveResult.passengerID%>
@@ -78,12 +104,6 @@
                         </td>
                         <td>
                             <%=reserveResult.birthday.toDateString()%>
-                        </td>
-                        <td>
-                            <%=reserveResult.seat%>
-                        </td>
-                        <td>
-                            <%=reserveResult.type%>
                         </td>
                     </tr>
                     <% }) %>
