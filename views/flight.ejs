@@ -14,57 +14,66 @@
 
 <body>
     <%-include('./navbar')%>
-    <div style="padding: 2%;">
-        <form action="/flight/sort" method="post">
-            <div>
-                <span>Flight: </span>
-                <input type="text" name="flightNum" value="" />
-                <span>Date: </span>
-                <input type="date" name="dateSelect" value="" />
+    <div style="padding: 2%">
+        <h1>Airline Flight Information</h1>
+        <form action="/flight/sort" method="POST">
+            <div class="row row-col-2">
+                <div class="mb-3 w-25">
+                    <label class="form-label">Flight</label>
+                    <input type="text" name="flightNum" value="" class="form-control" placeholder="XX123" width="300px"/>
+                </div>
+                <div class="mb-3 w-25">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="dateSelect" value="" class="form-control" width="300px"/>
+                </div>
             </div>
-            <input type="submit" value="submit" style="margin:1%;"/>
+            <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-
-    <table border="1">
-        <thead>
-            <th>airline</th>
-            <th>flight number</th>
-            <th>date</th>
-            <th>departure airport</th>
-            <th>destination airport</th>
-            <th>departure time</th>
-            <th>arrival time</th>
-        </thead>
-        <tbody>
-            <%flightResult.forEach(function(flightResult, index){ %>
-                <tr>
-                    <td>
-                        <%=flightResult.airlineName%>
-                    </td>
-                    <td>
-                        <%=flightResult.flightNumber%>
-                    </td>
-                    <td>
-                        <%=flightResult.flight_date.toDateString()%>
-                    </td>
-                    <td>
-                        <%=flightResult.departure_airport%>
-                    </td>
-                    <td>
-                        <%=flightResult.destination_airport%>
-                    </td>
-                    <td>
-                        <%=flightResult.departure_time%>
-                    </td>
-                    <td>
-                        <%=flightResult.arrival_time%>
-                    </td>
-                </tr>
+    
+    <div style="padding: 0% 1% 2% 1%;">
+        <table class="table">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Airline</th>
+                <th scope="col">Flight Number</th>
+                <th scope="col">Date</th>
+                <th scope="col">Departure Airport</th>
+                <th scope="col">Destination Airport</th>
+                <th scope="col">Departure Time</th>
+                <th scope="col">Arrival Time</th>
+            </tr>
+            </thead>
+            
+            <tbody>
+                <%flightResult.forEach(function(flightResult, index){ %>
+                    <tr>
+                        <td>
+                            <%=flightResult.airlineName%>
+                        </td>
+                        <td>
+                            <%=flightResult.flightNumber%>
+                        </td>
+                        <td>
+                            <%=flightResult.flight_date.toDateString()%>
+                        </td>
+                        <td>
+                            <%=flightResult.departure_airport%>
+                        </td>
+                        <td>
+                            <%=flightResult.destination_airport%>
+                        </td>
+                        <td>
+                            <%=flightResult.departure_time%>
+                        </td>
+                        <td>
+                            <%=flightResult.arrival_time%>
+                        </td>
+                    </tr>
                 <% }) %>
-        </tbody>
-    </table>
-    <a href="/flightplan/add">Add Flight Plan</a>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
