@@ -198,6 +198,65 @@ const insertFlightPlan = async (res, planID, flightNum, planeID, date) => {
   return transactionResult
 };
 
+const findReserveToUpdate = async (res, reserveID) => {
+  try {
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortKey = `SELECT * FROM PassengerReserveDetail WHERE (reserveID = ${reserveID})`
+    const result = await request.query(sortKey)
+    return result;
+  } catch (err) {
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally {
+    sql.close();
+  }
+};
+
+const updateReserveFlight = async (res)=> {
+  var dbConn = new sql.ConnectionPool(string_connection);
+  dbConn.connect().then(function () {
+    var transaction = new sql.Transaction(dbConn);
+    transaction
+      .begin()
+      .then(function () {
+        var request = new sql.Request(transaction);
+        request
+          .query()
+          .then(function () {
+            transaction
+              .commit()
+              .then(function (resp) {
+                console.log("transaction completed");
+                transactionResult += `transaction completed`
+                dbConn.close();
+              })
+              .catch(function (err) {
+                console.log("Error in Transaction Commit " + err);
+                transactionResult += `Error in Transaction Commit`
+                transaction.rollback();
+                dbConn.close();
+              });
+          })
+          .catch(function (err) {
+            transactionResult += `Error in Transaction Begin`
+            console.log("Error in Transaction Begin " + err);
+            transaction.rollback();
+            dbConn.close();
+          });
+      })
+      .catch(function (err) {
+        console.log(err);
+        dbConn.close();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
+  console.log(transactionResult)
+  return transactionResult
+};
+
 var express = require("express");
 var cors = require("cors");
 var app = express();
@@ -284,6 +343,27 @@ app.post("/flightplan/add", async function (req, res) {
   })
 });
 
+app.get("/reserve/find", async function (req, res) {
+  res.render("findReserveToUpdate")
+})
+
+app.post("/reserve/update", async function (req, res) {
+  let reserveNum = req.body.reserveID
+  let result = await findReserveToUpdate(res, reserveNum)
+  // console.log(result.recordset[0] === undefined)
+  if (result.recordset[0]!==undefined){
+    res.render("updateReserve", {
+      reserveResult: result.recordset
+    })
+  }
+  else {
+    res.redirect('/reserve/find')
+  }
+})
+
+app.post('/reserve/record', async function(req, res) {
+  res.render('updateReserveStatus')
+})
 
 app.listen(8083, "localhost", () => {
   console.log("URL: http://localhost:8083");
