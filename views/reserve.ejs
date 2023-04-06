@@ -14,72 +14,81 @@
 </head>
 <body>
     <%-include('./navbar')%>
-    <h1>Passenger Reservation</h1>
-    <div style="padding: 2%;">
-        <form action="/reserve/sort" method="post">
-            <div>
-                <span>Passport Number: </span>
-                <input type="text" name="passportNum" value="" />
-                <span>Flight Number: </span>
-                <input type="text" name="flightNum" value="" />
+    <div style="padding: 2%">
+        <h1>Passenger Reservation</h1>
+        <form action="/reserve/sort" method="POST">
+            <div class="row row-col-2">
+                <div class="mb-3 w-25">
+                    <label class="form-label">Passport Number</label>
+                    <input type="text" name="passportNum" value="" class="form-control" placeholder="" width="300px"/>
+                </div>
+                <div class="mb-3 w-25">
+                    <label class="form-label">Flight Number</label>
+                    <input type="text" name="flightNum" value="" class="form-control" placeholder="" width="300px"/>
+                </div>
             </div>
-            <input type="submit" value="submit" style="margin:1%;"/>
+            <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-    <table border="1">
-        <thead>
-            <th>Flight Number</th>
-            <th>Airline Name</th>
-            <th>Passport Number</th>
-            <th>First Number</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Gender</th>
-            <th>Nationality</th>
-            <th>Birthday</th>
-            <th>Seat Number</th>
-            <th>Aircraft Type</th>
-        </thead>
-        <tbody>
-            <%reserveResult.forEach(function(reserveResult, index){ %>
-                <tr>
-                    <td>
-                        <%=reserveResult.FlightNumber%>
-                    </td>
-                    <td>
-                        <%=reserveResult.airlineName%>
-                    </td>
-                    <td>
-                        <%=reserveResult.passengerID%>
-                    </td>
-                    <td>
-                        <%=reserveResult.firstName%>
-                    </td>
-                    <td>
-                        <%=reserveResult.middleName%>
-                    </td>
-                    <td>
-                        <%=reserveResult.lastName%>
-                    </td>
-                    <td>
-                        <%=reserveResult.gender%>
-                    </td>
-                    <td>
-                        <%=reserveResult.nationality%>
-                    </td>
-                    <td>
-                        <%=reserveResult.birthday.toDateString()%>
-                    </td>
-                    <td>
-                        <%=reserveResult.seat%>
-                    </td>
-                    <td>
-                        <%=reserveResult.type%>
-                    </td>
-                </tr>
-                <% }) %>
-        </tbody>
-    </table>
+    <div style="padding: 0% 1% 2% 1%;">
+        <table class="table">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Flight Number</th>
+                <th scope="col">Airline Name</th>
+                <th scope="col">Passport Number</th>
+                <th scope="col">First Number</th>
+                <th scope="col">Middle Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Nationality</th>
+                <th scope="col">Birthday</th>
+                <th scope="col">Seat Number</th>
+                <th scope="col">Aircraft Type</th>
+            </tr>
+            </thead>
+            
+            <tbody>
+                <%reserveResult.forEach(function(reserveResult, index){ %>
+                    <tr>
+                        <td>
+                            <%=reserveResult.FlightNumber%>
+                        </td>
+                        <td>
+                            <%=reserveResult.airlineName%>
+                        </td>
+                        <td>
+                            <%=reserveResult.passengerID%>
+                        </td>
+                        <td>
+                            <%=reserveResult.firstName%>
+                        </td>
+                        <td>
+                            <%=reserveResult.middleName%>
+                        </td>
+                        <td>
+                            <%=reserveResult.lastName%>
+                        </td>
+                        <td>
+                            <%=reserveResult.gender%>
+                        </td>
+                        <td>
+                            <%=reserveResult.nationality%>
+                        </td>
+                        <td>
+                            <%=reserveResult.birthday.toDateString()%>
+                        </td>
+                        <td>
+                            <%=reserveResult.seat%>
+                        </td>
+                        <td>
+                            <%=reserveResult.type%>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
