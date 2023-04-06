@@ -175,12 +175,14 @@ const insertFlightPlan = async (res, planID, flightNum, planeID, date) => {
               .catch(function (err) {
                 console.log("Error in Transaction Commit " + err);
                 transactionResult += `Error in Transaction Commit`
+                transaction.rollback();
                 dbConn.close();
               });
           })
           .catch(function (err) {
             transactionResult += `Error in Transaction Begin`
             console.log("Error in Transaction Begin " + err);
+            transaction.rollback();
             dbConn.close();
           });
       })
@@ -277,7 +279,7 @@ app.get("/flightplan/add", async function (req, res) {
 app.post("/flightplan/add", async function (req, res) {
   let status = await insertFlightPlan(res, req.body.planID, req.body.flightNum, req.body.planeNum, req.body.dateSelect);
   console.log(status)
-  res.render("addFLightPlanStatus", {
+  res.render("addFlightPlanStatus", {
     addResult: status
   })
 });
