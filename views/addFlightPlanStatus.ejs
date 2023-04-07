@@ -13,11 +13,28 @@
 <body>
     <%-include('./navbar')%>
 
-    <h2><%=addResult%></h2>
     <div class="row">
         <div class="col text-center">
+            <% if (insertResult === null){%>
+                <h2>Insert not successful</h2>
+            <%}else{%>
+                <%insertResult.forEach(function(insertResult, index){
+                %>
+                    <div>
+                        <h2>Add Flight Plan Successful</h2>
+                        <h3>Flight Number: <%=insertResult.flightNumber%></h3>
+                        <h3>Date: <%=insertResult.flight_date.toDateString()%></h3>
+                        <h5>Departure Airport: <%=insertResult.departure_airport%></h5>
+                        <h5>Departure Time: <%=insertResult.departure_time%></h5>
+                        <h5>Destination Airport: <%=insertResult.destination_airport%></h5>
+                        <h5>Arrival Time: <%=insertResult.arrival_time%></h5>
+                    </div>
+                <%
+            })%><%
+            } %>
             <a style="margin: auto;"href="/flight"><button class="btn btn-primary">Back To Flight Page</button></a>
         </div>
     </div>
+
 </body>
 </html>
