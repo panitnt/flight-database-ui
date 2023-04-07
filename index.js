@@ -224,6 +224,47 @@ const findReserveToUpdate = async (res, reserveID) => {
   }
 };
 
+const findReserveToDelete = async (res, reserveID) => {
+  var dbConn = new sql.ConnectionPool(string_connection);
+  dbConn.connect().then(function () {
+    var transaction = new sql.Transaction(dbConn);
+    transaction
+      .begin()
+      .then(function () {
+        var request = new sql.Request(transaction);
+        request
+          .query(
+            `DELETE FROM Reserve WHERE (reserveID = ${reserveID})`
+          )
+          .then(function () {
+            transaction
+              .commit()
+              .then(function (resp) {
+                console.log("transaction completed");
+                dbConn.close();
+              })
+              .catch(function (err) {
+                console.log("Error in Transaction Commit " + err);
+                transaction.rollback();
+                dbConn.close();
+              });
+          })
+          .catch(function (err) {
+            console.log("Error in Transaction Begin " + err);
+            transaction.rollback();
+            dbConn.close();
+          });
+      })
+      .catch(function (err) {
+        console.log(err);
+        dbConn.close();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
+};
+
 const updateReserveFlight = async (res)=> {
   var dbConn = new sql.ConnectionPool(string_connection);
 };
@@ -339,6 +380,17 @@ app.post("/reserve/update", async function (req, res) {
   else {
     res.redirect('/reserve/find')
   }
+})
+
+app.get("/reserve/remove", async function (req, res) {
+  res.render("findReserveToDelete")
+})
+
+app.post("/reserve/delete", async function (req, res) {
+  let reserveNum = req.body.reserveID
+  let result = await findReserveToDelete(res, reserveNum)
+  console.log(result)
+  res.redirect("/reserve")
 })
 
 app.post('/reserve/record', async function(req, res) {
