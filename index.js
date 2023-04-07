@@ -224,6 +224,7 @@ const findReserveToUpdate = async (res, reserveID) => {
   }
 };
 
+
 const findReserveToDelete = async (res, reserveID) => {
   var dbConn = new sql.ConnectionPool(string_connection);
   dbConn.connect().then(function () {
@@ -265,8 +266,59 @@ const findReserveToDelete = async (res, reserveID) => {
   });
 };
 
-const updateReserveFlight = async (res)=> {
+
+const updateReserveFlight = async (res, reserveID, newFPID)=> {
   var dbConn = new sql.ConnectionPool(string_connection);
+  dbConn.connect().then(function () {
+    var transaction = new sql.Transaction(dbConn);
+    transaction
+      .begin()
+      .then(function () {
+        var request = new sql.Request(transaction);
+        request
+          .query(`UPDATE Reserve set flightPlanID = '${newFPID}' WHERE reserveID = '${reserveID}'`)
+          .then(function () {
+            transaction
+              .commit()
+              .then(function (resp) {
+                console.log("transaction completed");
+                dbConn.close();
+              })
+              .catch(function (err) {
+                console.log("Error in Transaction Commit " + err);
+                transaction.rollback();
+                dbConn.close();
+              });
+          })
+          .catch(function (err) {
+            console.log("Error in Transaction Begin " + err);
+            transaction.rollback();
+            dbConn.close();
+          });
+      })
+      .catch(function (err) {
+        console.log(err);
+        dbConn.close();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
+};
+
+const checkUpdateReserve = async (res, reserveID, planID) => {
+  try{
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortKey = `SELECT * FROM Reserve r, PassengerReserveDetail pd WHERE (r.reserveID = pd.reserveID) and (r.reserveID = '${reserveID}')  and (pd.PlanID = '${planID}')`;
+    const result = await request.query(sortKey)
+    return result
+  } catch(err){
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally{
+    sql.close();
+  }
 };
 
 var express = require("express");
@@ -394,7 +446,18 @@ app.post("/reserve/delete", async function (req, res) {
 })
 
 app.post('/reserve/record', async function(req, res) {
-  res.render('updateReserveStatus')
+  await updateReserveFlight(res, req.body.reserveID, req.body.planID)
+  let result = await checkUpdateReserve(res, req.body.reserveID, req.body.planID)
+  if (result.recordset[0]!==undefined){
+    res.render("updateReserveStatus", {
+      updateResult: result.recordset
+    })
+  }
+  else {
+    res.render("updateReserveStatus", {
+      updateResult: null
+    })
+  }
 })
 
 app.listen(8083, "localhost", () => {
