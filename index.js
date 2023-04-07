@@ -266,7 +266,6 @@ const findReserveToDelete = async (res, reserveID) => {
   });
 };
 
-
 const updateReserveFlight = async (res, reserveID, newFPID)=> {
   var dbConn = new sql.ConnectionPool(string_connection);
   dbConn.connect().then(function () {
@@ -439,8 +438,8 @@ app.get("/reserve/remove", async function (req, res) {
 })
 
 app.post("/reserve/delete", async function (req, res) {
-  let reserveNum = req.body.reserveID
-  let result = await findReserveToDelete(res, reserveNum)
+  let reserveNums = req.body.reserveDeleteID
+  let result = await findReserveToDelete(res, reserveNums)
   console.log(result)
   res.redirect("/reserve")
 })

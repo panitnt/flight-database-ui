@@ -39,6 +39,7 @@
         <table class="table">
             <thead class="table-dark">
             <tr>
+                <th scope="col">Reserve ID</th>
                 <th scope="col">Flight Number</th>
                 <th scope="col">Airline Name</th>
                 <th scope="col">Flight Date</th>
@@ -61,6 +62,9 @@
             <tbody>
                 <%reserveResult.forEach(function(reserveResult, index){ %>
                     <tr>
+                        <td>
+                            <%=reserveResult.reserveID%>
+                        </td>
                         <td>
                             <%=reserveResult.flightNumber%>
                         </td>
