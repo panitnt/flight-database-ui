@@ -224,8 +224,43 @@ const findReserveToUpdate = async (res, reserveID) => {
   }
 };
 
-const updateReserveFlight = async (res)=> {
+const updateReserveFlight = async (res, reserveID, newFPID)=> {
   var dbConn = new sql.ConnectionPool(string_connection);
+  dbConn.connect().then(function () {
+    var transaction = new sql.Transaction(dbConn);
+    transaction
+      .begin()
+      .then(function () {
+        var request = new sql.Request(transaction);
+        request
+          .query(`UPDATE Reserve set flightPlanID = '${newFPID}' WHERE reserveID = '${reserveID}'`)
+          .then(function () {
+            transaction
+              .commit()
+              .then(function (resp) {
+                console.log("transaction completed");
+                dbConn.close();
+              })
+              .catch(function (err) {
+                console.log("Error in Transaction Commit " + err);
+                transaction.rollback();
+                dbConn.close();
+              });
+          })
+          .catch(function (err) {
+            console.log("Error in Transaction Begin " + err);
+            transaction.rollback();
+            dbConn.close();
+          });
+      })
+      .catch(function (err) {
+        console.log(err);
+        dbConn.close();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
 };
 
 var express = require("express");
@@ -342,6 +377,7 @@ app.post("/reserve/update", async function (req, res) {
 })
 
 app.post('/reserve/record', async function(req, res) {
+  await updateReserveFlight(res, req.body.reserveID, req.body.planID)
   res.render('updateReserveStatus')
 })
 
