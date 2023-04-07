@@ -263,6 +263,21 @@ const updateReserveFlight = async (res, reserveID, newFPID)=> {
   });
 };
 
+const checkUpdateReserve = async (res, reserveID, planID) => {
+  try{
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortKey = `SELECT * FROM Reserve r, PassengerReserveDetail pd WHERE (r.reserveID = pd.reserveID) and (r.reserveID = '${reserveID}')  and (pd.PlanID = '${planID}')`;
+    const result = await request.query(sortKey)
+    return result
+  } catch(err){
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally{
+    sql.close();
+  }
+};
+
 var express = require("express");
 var cors = require("cors");
 var app = express();
@@ -378,7 +393,17 @@ app.post("/reserve/update", async function (req, res) {
 
 app.post('/reserve/record', async function(req, res) {
   await updateReserveFlight(res, req.body.reserveID, req.body.planID)
-  res.render('updateReserveStatus')
+  let result = await checkUpdateReserve(res, req.body.reserveID, req.body.planID)
+  if (result.recordset[0]!==undefined){
+    res.render("updateReserveStatus", {
+      updateResult: result.recordset
+    })
+  }
+  else {
+    res.render("updateReserveStatus", {
+      updateResult: null
+    })
+  }
 })
 
 app.listen(8083, "localhost", () => {
