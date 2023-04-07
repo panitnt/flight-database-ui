@@ -309,7 +309,7 @@ const checkUpdateReserve = async (res, reserveID, planID) => {
   try{
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    let sortKey = `SELECT * FROM Reserve r, PassengerReserveDetail pd WHERE (r.reserveID = pd.reserveID) and (r.reserveID = '${reserveID}')  and (pd.PlanID = '${planID}')`;
+    let sortKey = `SELECT r.reserveID, r.flightPlanID, pd.flightNumber, pd.flight_date, pd.departure_airport, pd.departure_time, pd.destination_airport, pd.arrival_time, pd.PlanID FROM Reserve r, PassengerReserveDetail pd WHERE (r.reserveID = pd.reserveID) and (r.reserveID = '${reserveID}')  and (pd.PlanID = '${planID}')`;
     const result = await request.query(sortKey)
     return result
   } catch(err){
