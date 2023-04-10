@@ -1,6 +1,11 @@
 # database-ui
 
-## Instruction
+## Instruction for use this UI
+### Insert view in your database
+Create and Insert data from [this file](https://github.com/panitnt/database-data/blob/main/01-createandinsert.ipynb)
+### Insert view in your database
+Create view from [this file](https://github.com/panitnt/database-data/blob/main/04-addviews.ipynb)
+### Clone UI
 
 * Clone this project
 ```
@@ -31,3 +36,4 @@ DB_PORT=1433
 ```
 node index.js
 ```
+
