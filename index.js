@@ -169,18 +169,15 @@ const insertFlightPlan = async (res, planID, flightNum, planeID, date) => {
               .commit()
               .then(function (resp) {
                 console.log("transaction completed");
-                transactionResult += `transaction completed`
                 dbConn.close();
               })
               .catch(function (err) {
                 console.log("Error in Transaction Commit " + err);
-                transactionResult += `Error in Transaction Commit`
                 transaction.rollback();
                 dbConn.close();
               });
           })
           .catch(function (err) {
-            transactionResult += `Error in Transaction Begin`
             console.log("Error in Transaction Begin " + err);
             transaction.rollback();
             dbConn.close();
@@ -194,8 +191,133 @@ const insertFlightPlan = async (res, planID, flightNum, planeID, date) => {
         console.log(err);
       });
   });
-  console.log(transactionResult)
   return transactionResult
+};
+
+const checkInsertFlightPlan = async (res, planID, flightNum, planeNum, dateSelect) => {
+  try {
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortKey = `SELECT * FROM AllFlightShow WHERE ( PlanID = '${planID}') and (flightNumber = '${flightNum.toUpperCase()}') and (planeID = '${planeNum}') and (flight_date = '${dateSelect}')`
+    const result = await request.query(sortKey)
+    return result;
+  } catch(err) {
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally{
+    sql.close();
+  }
+};
+
+const findReserveToUpdate = async (res, reserveID) => {
+  try {
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortKey = `SELECT * FROM PassengerReserveDetail WHERE (reserveID = ${reserveID})`
+    const result = await request.query(sortKey)
+    return result;
+  } catch (err) {
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally {
+    sql.close();
+  }
+};
+
+
+const findReserveToDelete = async (res, reserveID) => {
+  var dbConn = new sql.ConnectionPool(string_connection);
+  dbConn.connect().then(function () {
+    var transaction = new sql.Transaction(dbConn);
+    transaction
+      .begin()
+      .then(function () {
+        var request = new sql.Request(transaction);
+        request
+          .query(
+            `DELETE FROM Reserve WHERE (reserveID = ${reserveID})`
+          )
+          .then(function () {
+            transaction
+              .commit()
+              .then(function (resp) {
+                console.log("transaction completed");
+                dbConn.close();
+              })
+              .catch(function (err) {
+                console.log("Error in Transaction Commit " + err);
+                transaction.rollback();
+                dbConn.close();
+              });
+          })
+          .catch(function (err) {
+            console.log("Error in Transaction Begin " + err);
+            transaction.rollback();
+            dbConn.close();
+          });
+      })
+      .catch(function (err) {
+        console.log(err);
+        dbConn.close();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
+};
+
+const updateReserveFlight = async (res, reserveID, newFPID)=> {
+  var dbConn = new sql.ConnectionPool(string_connection);
+  dbConn.connect().then(function () {
+    var transaction = new sql.Transaction(dbConn);
+    transaction
+      .begin()
+      .then(function () {
+        var request = new sql.Request(transaction);
+        request
+          .query(`UPDATE Reserve set flightPlanID = '${newFPID}' WHERE reserveID = '${reserveID}'`)
+          .then(function () {
+            transaction
+              .commit()
+              .then(function (resp) {
+                console.log("transaction completed");
+                dbConn.close();
+              })
+              .catch(function (err) {
+                console.log("Error in Transaction Commit " + err);
+                transaction.rollback();
+                dbConn.close();
+              });
+          })
+          .catch(function (err) {
+            console.log("Error in Transaction Begin " + err);
+            transaction.rollback();
+            dbConn.close();
+          });
+      })
+      .catch(function (err) {
+        console.log(err);
+        dbConn.close();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
+};
+
+const checkUpdateReserve = async (res, reserveID, planID) => {
+  try{
+    let con = await sql.connect(string_connection);
+    let request = new sql.Request(con);
+    let sortKey = `SELECT r.reserveID, r.flightPlanID, pd.flightNumber, pd.flight_date, pd.departure_airport, pd.departure_time, pd.destination_airport, pd.arrival_time, pd.PlanID FROM Reserve r, PassengerReserveDetail pd WHERE (r.reserveID = pd.reserveID) and (r.reserveID = '${reserveID}')  and (pd.PlanID = '${planID}')`;
+    const result = await request.query(sortKey)
+    return result
+  } catch(err){
+    console.log(string_connection);
+    res.status(500).send("Error connecting to the database");
+  } finally{
+    sql.close();
+  }
 };
 
 var express = require("express");
@@ -279,11 +401,63 @@ app.get("/flightplan/add", async function (req, res) {
 app.post("/flightplan/add", async function (req, res) {
   let status = await insertFlightPlan(res, req.body.planID, req.body.flightNum, req.body.planeNum, req.body.dateSelect);
   console.log(status)
-  res.render("addFlightPlanStatus", {
-    addResult: status
-  })
+  let result = await checkInsertFlightPlan(res, req.body.planID, req.body.flightNum, req.body.planeNum, req.body.dateSelect);
+  if (result.recordset[0]!==undefined){
+    res.render("addFlightPlanStatus", {
+      insertResult: result.recordset
+    })
+  }
+  else {
+    res.render("addFlightPlanStatus", {
+      insertResult: null
+    })
+  }
+
 });
 
+app.get("/reserve/find", async function (req, res) {
+  res.render("findReserveToUpdate")
+})
+
+app.post("/reserve/update", async function (req, res) {
+  let reserveNum = req.body.reserveID
+  let result = await findReserveToUpdate(res, reserveNum)
+  // console.log(result.recordset[0] === undefined)
+  if (result.recordset[0]!==undefined){
+    res.render("updateReserve", {
+      reserveResult: result.recordset
+    })
+  }
+  else {
+    res.redirect('/reserve/find')
+  }
+})
+
+app.get("/reserve/remove", async function (req, res) {
+  res.render("findReserveToDelete")
+})
+
+app.post("/reserve/delete", async function (req, res) {
+  let reserveNums = req.body.reserveDeleteID
+  let result = await findReserveToDelete(res, reserveNums)
+  console.log(result)
+  res.redirect("/reserve")
+})
+
+app.post('/reserve/record', async function(req, res) {
+  await updateReserveFlight(res, req.body.reserveID, req.body.planID)
+  let result = await checkUpdateReserve(res, req.body.reserveID, req.body.planID)
+  if (result.recordset[0]!==undefined){
+    res.render("updateReserveStatus", {
+      updateResult: result.recordset
+    })
+  }
+  else {
+    res.render("updateReserveStatus", {
+      updateResult: null
+    })
+  }
+})
 
 app.listen(8083, "localhost", () => {
   console.log("URL: http://localhost:8083");

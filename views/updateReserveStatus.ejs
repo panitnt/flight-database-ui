@@ -15,27 +15,27 @@
 
     <div class="row">
         <div class="col text-center">
-            <% if (insertResult === null){%>
-                <h2>Insert not successful</h2>
+            <% if (updateResult === null){%>
+                <h2>Update not successful</h2>
             <%}else{%>
-                <%insertResult.forEach(function(insertResult, index){
+                <%updateResult.forEach(function(updateResult, index){
                 %>
                     <div>
-                        <h2>Add Flight Plan Successful</h2>
-                        <h3>Plan ID: <%=insertResult.planID%></h3>
-                        <h3>Flight Number: <%=insertResult.flightNumber%></h3>
-                        <h3>Date: <%=insertResult.flight_date.toDateString()%></h3>
-                        <h5>Departure Airport: <%=insertResult.departure_airport%></h5>
-                        <h5>Departure Time: <%=insertResult.departure_time%></h5>
-                        <h5>Destination Airport: <%=insertResult.destination_airport%></h5>
-                        <h5>Arrival Time: <%=insertResult.arrival_time%></h5>
+                        <h2>Update Flight Plan Successful</h2>
+                        <h3>Reserve ID: <%=updateResult.reserveID%></h3>
+                        <h3>Plan ID: <%=updateResult.PlanID%></h3>
+                        <h3>Flight Number: <%=updateResult.flightNumber%></h3>
+                        <h3>Date: <%=updateResult.flight_date.toDateString()%></h3>
+                        <h5>Departure Airport: <%=updateResult.departure_airport%></h5>
+                        <h5>Departure Time: <%=updateResult.departure_time%></h5>
+                        <h5>Destination Airport: <%=updateResult.destination_airport%></h5>
+                        <h5>Arrival Time: <%=updateResult.arrival_time%></h5>
                     </div>
                 <%
             })%><%
             } %>
-            <a style="margin: auto;"href="/flight"><button class="btn btn-primary">Back To Flight Page</button></a>
+            <a style="margin: auto;"href="/reserve"><button class="btn btn-primary">Back To Reserve Page</button></a>
         </div>
     </div>
-
 </body>
 </html>
