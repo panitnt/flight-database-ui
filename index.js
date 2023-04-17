@@ -309,8 +309,9 @@ const checkUpdateReserve = async (res, reserveID, planID) => {
   try{
     let con = await sql.connect(string_connection);
     let request = new sql.Request(con);
-    let sortKey = `SELECT r.reserveID, r.flightPlanID, pd.flightNumber, pd.flight_date, pd.departure_airport, pd.departure_time, pd.destination_airport, pd.arrival_time, pd.PlanID FROM Reserve r, PassengerReserveDetail pd WHERE (r.reserveID = pd.reserveID) and (r.reserveID = '${reserveID}')  and (pd.PlanID = '${planID}')`;
+    let sortKey = `SELECT r.reserveID, r.flightPlanID, pd.flightNumber, pd.flight_date, pd.departure_airport, pd.departure_time, pd.destination_airport, pd.arrival_time FROM Reserve r, PassengerReserveDetail pd WHERE (r.reserveID = pd.reserveID) and (r.reserveID = '${reserveID}')  and (r.flightPlanID = '${planID}')`;
     const result = await request.query(sortKey)
+    console.log(result);
     return result
   } catch(err){
     console.log(string_connection);
@@ -423,6 +424,7 @@ app.post("/reserve/update", async function (req, res) {
   let reserveNum = req.body.reserveID
   let result = await findReserveToUpdate(res, reserveNum)
   // console.log(result.recordset[0] === undefined)
+  // console.log(result)
   if (result.recordset[0]!==undefined){
     res.render("updateReserve", {
       reserveResult: result.recordset
@@ -445,8 +447,10 @@ app.post("/reserve/delete", async function (req, res) {
 })
 
 app.post('/reserve/record', async function(req, res) {
-  await updateReserveFlight(res, req.body.reserveID, req.body.planID)
-  let result = await checkUpdateReserve(res, req.body.reserveID, req.body.planID)
+  let hello = updateReserveFlight(res, req.body.reserveID, req.body.planID)
+  let result = checkUpdateReserve(res, req.body.reserveID, req.body.planID)
+  console.log(hello)
+  console.log(result)
   if (result.recordset[0]!==undefined){
     res.render("updateReserveStatus", {
       updateResult: result.recordset
