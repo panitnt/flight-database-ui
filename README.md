@@ -1,7 +1,10 @@
 # database-ui
 
+## Project video
+You can click [here] (https://youtu.be/AmuQ4OiXao8) to see a video.
+
 ## Instruction for use this UI
-### Insert view in your database
+### Insert data in your database
 Create and Insert data from [this file](https://github.com/panitnt/database-data/blob/main/01-createandinsert.ipynb)
 ### Insert view in your database
 Create view from [this file](https://github.com/panitnt/database-data/blob/main/04-addviews.ipynb)
