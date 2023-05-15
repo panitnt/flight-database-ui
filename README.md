@@ -1,7 +1,7 @@
 # database-ui
 
 ## Project video
-You can click [here] (https://youtu.be/AmuQ4OiXao8) to see a video.
+You can click [here](https://youtu.be/AmuQ4OiXao8) to see a video.
 
 ## Instruction for use this UI
 ### Insert data in your database
